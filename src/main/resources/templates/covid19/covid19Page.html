@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>COVID-19</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/css/covid19-style.css"/>
+</head>
+
+<body>
+<div class="container">
+    <div class="row justify-content-center" style="margin-top: 30px;">
+        <h1><strong>코로나 COVID-19</strong></h1>
+    </div>
+    <div class="row justify-content-center">
+        <strong><label for="decide-patient-count">국내 누적 확진환자</label></strong>
+        <strong><span class="decide-patient-count" id="decide-patient-count"
+        ></span></strong>
+        <span class="bar" aria-hidden="true"
+              style="padding-left: 5px; padding-right: 5px; color: darkgray; font-size: 30px; margin-top: -12px">|</span>
+        <strong><label for="before-decide-patient-count">전일대비</label></strong>
+        <strong><span class="before-decide-patient-count" id="before-decide-patient-count"
+        ></span></strong>
+    </div>  <!-- 맨 위 타이틀 + 전체 확진자, 전일대비 표시 -->
+    <div class="row justify-content-center" id="domestic-cumulative-status" style="margin-top: 10px;">
+        <div class="col-md-4">
+            <div class="card bg-custom">
+                <div class="card-body">
+                    <div class="main-dashboard-text">검사중</div>
+                    <h4><strong>
+                        <div class="main-dashboard-text" id="total-exam-count"></div>
+                    </strong></h4>
+                    <div class="main-dashboard-text" id="before-exam-count"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-custom">
+                <div class="card-body">
+                    <div class="main-dashboard-text">사망자</div>
+                    <h4><strong>
+                        <div class="main-dashboard-text" id="total-death-count"></div>
+                    </strong></h4>
+                    <div class="main-dashboard-text" id="before-death-count">️</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-custom">
+                <div class="card-body">
+                    <div class="main-dashboard-text">격리해제</div>
+                    <h4><strong>
+                        <div class="main-dashboard-text" id="total-clear-count"></div>
+                    </strong></h4>
+                    <div class="main-dashboard-text" id="before-clear-count"></div>
+                </div>
+            </div>
+        </div>
+    </div>  <!-- 전체 상황 보여주는 카드들 -->
+
+    <!-- Bar Chart -->
+    <div class="card shadow mb-4" style="margin-top: 30px;">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">7일간 확진자 발생현황</h6>
+        </div>
+        <div class="card-body" style="height: 50vh">
+            <div class="progress" style="left: 12%;">
+                <div class="progress-bar bg-danger" role="progressbar" style="" aria-valuenow="80" aria-valuemin="0"
+                     aria-valuemax="100">70%
+                </div>
+                <span class="text" count-value="152"></span>
+            </div>
+
+            <div class="progress" style="left: 24%;">
+                <div class="progress-bar bg-primary" role="progressbar" style="" aria-valuenow="80" aria-valuemin="0"
+                     aria-valuemax="100">70%
+                </div>
+                <span class="text" count-value="252"></span>
+            </div>
+
+            <div class="progress" style="left: 36%;">
+                <div class="progress-bar bg-primary" role="progressbar" style="" aria-valuenow="80" aria-valuemin="0"
+                     aria-valuemax="100">70%
+                </div>
+                <span class="text" count-value="41"></span>
+            </div>
+
+            <div class="progress" style="left: 48%;">
+                <div class="progress-bar bg-primary" role="progressbar" style="" aria-valuenow="80" aria-valuemin="0"
+                     aria-valuemax="100">70%
+                </div>
+                <span class="text" count-value="52"></span>
+            </div>
+
+            <div class="progress" style="left: 60%;">
+                <div class="progress-bar bg-primary" role="progressbar" style="" aria-valuenow="80" aria-valuemin="0"
+                     aria-valuemax="100">70%
+                </div>
+                <span class="text" count-value="40"></span>
+            </div>
+
+            <div class="progress" style="left: 72%;">
+                <div class="progress-bar bg-primary" role="progressbar" style="" aria-valuenow="80" aria-valuemin="0"
+                     aria-valuemax="100">70%
+                </div>
+                <span class="text" count-value="90"></span>
+            </div>
+
+            <div class="progress" style="left: 84%;">
+                <div class="progress-bar bg-primary" role="progressbar" style="" aria-valuenow="80" aria-valuemin="0"
+                     aria-valuemax="100">70%
+                </div>
+                <span class="text" count-value="12"></span>
+            </div>
+        </div>
+        <div class="card-footer">
+            <span class="day-property" style="left: 12%">5.14</span>
+            <span class="day-property" style="left: 24%">5.15</span>
+            <span class="day-property" style="left: 36%">5.16</span>
+            <span class="day-property" style="left: 48%">5.17</span>
+            <span class="day-property" style="left: 60%">5.18</span>
+            <span class="day-property" style="left: 72%">5.19</span>
+            <span class="day-property" style="left: 84%">5.20</span>
+        </div>
+    </div>
+
+</div>가
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mustache@4.2.0/mustache.min.js"></script>
+<script type="text/javascript" src="/js/covid19-script.js"></script>
+</body>
+</html>
