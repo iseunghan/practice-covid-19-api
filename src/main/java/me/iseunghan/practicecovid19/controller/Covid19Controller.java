@@ -1,15 +1,16 @@
 package me.iseunghan.practicecovid19.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import me.iseunghan.practicecovid19.entity.Response;
+import me.iseunghan.practicecovid19.entity.CovidAttributes;
+import me.iseunghan.practicecovid19.entity.CovidSidoAttributes;
 import org.springframework.http.*;
 import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.UnsupportedEncodingException;
@@ -17,7 +18,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
-import java.util.List;
+import java.time.LocalDate;
 
 /**
  * 21.05.24 월 : 코로나 api 호출 후 응답 결과까지 얻기 완료.
@@ -54,7 +55,88 @@ public class Covid19Controller {
                 String.class
         );
 
-        return "응답 결과 : " + response.getBody();
+        // ObjectMapper를 상속받는 XmlMapper를 선언
+        ObjectMapper xmlMapper = new XmlMapper();
+        CovidSidoAttributes covidSidoAttributes = null;
+        try {
+            covidSidoAttributes = xmlMapper.readValue(response.getBody(), CovidSidoAttributes.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok(covidSidoAttributes);
+    }
+
+    /**
+     * 현재 날짜 기준으로 국내 코로나19 감염현황을 조회힙니다.
+     * - 총 2개의 조회 데이터
+     * - item[0] : 현재일 감염현황
+     * - item[1] : 이전일 감염현황
+     */
+    @GetMapping("/domestic-status")
+    public ResponseEntity get_covid19_info() throws UnsupportedEncodingException {
+        RestTemplate rt = new RestTemplate();
+        rt.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
+        HttpHeaders headers = new HttpHeaders();
+        MediaType mediaType = MediaType.valueOf("application/xml;charset=UTF-8");
+        headers.setContentType(mediaType);
+
+        URI covidRequestURI = getCovidRequestURI(covid19Inf, 1);
+
+        HttpEntity http = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = rt.exchange(
+                covidRequestURI,
+                HttpMethod.GET,
+                http,
+                String.class
+        );
+
+        ObjectMapper xmlMapper = new XmlMapper();
+        xmlMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+        CovidAttributes covidAttributes = null;
+        try {
+            covidAttributes = xmlMapper.readValue(response.getBody(), CovidAttributes.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok(covidAttributes);
+    }
+
+    /**
+     * [전국 감염현황] 현재 일자를 기준으로 7일 전까지 감염현황을 조회합니다.
+     * - items[0] 부터 최신 날짜 데이터임.
+     */
+    @GetMapping("/domestic-status-7")
+    public ResponseEntity get_covid19_info_7days() throws UnsupportedEncodingException {
+        RestTemplate rt = new RestTemplate();
+        rt.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
+        HttpHeaders headers = new HttpHeaders();
+        MediaType mediaType = MediaType.valueOf("application/xml;charset=UTF-8");
+        headers.setContentType(mediaType);
+
+        URI covidRequestURI = getCovidRequestURI(covid19Inf, 6);
+
+        HttpEntity http = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = rt.exchange(
+                covidRequestURI,
+                HttpMethod.GET,
+                http,
+                String.class
+        );
+
+        // ObjectMapper를 상속받는 XmlMapper를 선언
+        ObjectMapper xmlMapper = new XmlMapper();
+        CovidAttributes covidAttributes = null;
+        try {
+            covidAttributes = xmlMapper.readValue(response.getBody(), CovidAttributes.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok(covidAttributes);
     }
 
     /**
