@@ -116,7 +116,7 @@ public class Covid19Controller {
         MediaType mediaType = MediaType.valueOf("application/xml;charset=UTF-8");
         headers.setContentType(mediaType);
 
-        URI covidRequestURI = getCovidRequestURI(covid19Inf, 6);
+        URI covidRequestURI = getCovidRequestURI(covid19Inf, 7);
 
         HttpEntity http = new HttpEntity<>(headers);
 
@@ -148,7 +148,7 @@ public class Covid19Controller {
     private URI getCovidRequestURI(String url, int days) throws UnsupportedEncodingException {
         // days
         LocalDate now = LocalDate.now();
-        LocalDate yst = LocalDate.of(now.getYear(), now.getMonth(), now.getDayOfMonth() - days);
+        LocalDate yst = now.minusDays(days);
         String startCreateDt = yst.toString().replaceAll("-", "");
         String endCreateDt = now.toString().replaceAll("-", "");
 
