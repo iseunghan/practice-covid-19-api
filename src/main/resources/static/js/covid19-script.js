@@ -1,14 +1,53 @@
 
-$(function (){
+$(function () {
+var $7daysGraph = $('#7days-graph');
+    var $daysProperties = $('#7days-properties');
+
+    var graph_Template = "<div class=\"progress\" style=\"left: {{num}}%;\">\n" +
+        "                <div class=\"progress-bar bg-danger\" role=\"progressbar\" style=\"top: {{top}}%; width: 100%; height: {{height}}%\" aria-valuenow=\"{{count}}\" aria-valuemin=\"0\"\n" +
+        "                     aria-valuemax=\"100\">\n" +
+        "                </div>\n" +
+        "                <span class=\"text\" count-value=\"{{count}}\"></span>\n" +
+        "            </div>";
+
+    var date_Template = "<span class=\"day-property\" id=\"date-{{dataId}}\" style=\"left: {{num}}%\">{{date}}</span>";
+
+    /**
+     * 7일간 확진자 감염현황 그래프 렌더링 함수
+     */
+    function renderGraph(num, count) {
+        var per = count / 10;
+        var data = {
+            num : num * 12,
+            top : (100-per),
+            height : per,
+            count : count
+        }
+        $7daysGraph.append(Mustache.render(graph_Template, data));
+    }
+
+    /**
+     * 7일간의 날짜를 렌더링 해주는 함수
+     */
+    function renderDate(dataId, num, date){
+        var data = {
+            dataId : dataId,
+            num : (num * 12),
+            date : date
+        };
+
+        $daysProperties.append(Mustache.render(date_Template, data));
+    }
+
     /**
      * 화면 로드 시, 제일 상단 부분 (국내 누적확진자 , 전일대비 증가) 데이터 삽입
      */
     $.ajax({
-        url : "http://localhost:8080/covid19-api/domestic-status",
-        type : "GET",
+        url: "http://localhost:8080/covid19-api/domestic-status",
+        type: "GET",
         contentType: "application/json",
 
-        success : function (result){
+        success: function (result) {
             // <-- 맨 위 상단 누적확진자, 전일대비 확진자 표시 -->
             const list = result.body.items;
             var now_decideCnt = list[0].decideCnt;
@@ -39,8 +78,29 @@ $(function (){
             $('#before-clear-count').text(diff_clearCnt.toLocaleString());
         }
     })
-});
 
+    /**
+     * 화면 로드 시, 7일간 확진자 감염현황 데이터 삽입
+     */
+    $.ajax({
+        url: "http://localhost:8080/covid19-api/domestic-status-7",
+        type: "GET",
+        contentType: "application/json",
+
+        success: function (result) {
+            var items = result.body.items;
+            console.log(result);
+
+            for (var i = items.length-1; i > 0; i--) {
+                var date = items[i-1].stateDt.substring(4,6) + '.' + items[i-1].stateDt.substring(6);
+                var diff = items[i-1].decideCnt - items[i].decideCnt;
+                renderDate(8-i, 8-i, date);
+                renderGraph(8 - i, diff);
+            }
+        }
+    });
+
+});
 /*
     전일 대비 카운트의 값이 증가인지 감소인지 체크해주는 함수
  */
