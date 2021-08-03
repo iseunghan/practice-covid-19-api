@@ -64,10 +64,10 @@
 .day-property {
     position: absolute;
     font-size: 12px;
-    color: rgba(131, 131, 131, 0.5);
+    color: rgba(0, 0, 0, 0.6);
     margin-top: -6px;
 }
 
-.text[count-value]::after {
-    content: attr(count-value);
+.progress-bar[aria-valuenow]::after{
+    content: attr(aria-valuenow);
 }

@@ -1,6 +1,7 @@
 
 $(function () {
-var $7daysGraph = $('#7days-graph');
+    var $domesticStatus = $('#domestic-cumulative-status');
+    var $7daysGraph = $('#7days-graph');
     var $daysProperties = $('#7days-properties');
 
     var graph_Template = "<div class=\"progress\" style=\"left: {{num}}%;\">\n" +
@@ -11,6 +12,13 @@ var $7daysGraph = $('#7days-graph');
         "            </div>";
 
     var date_Template = "<span class=\"day-property\" id=\"date-{{dataId}}\" style=\"left: {{num}}%\">{{date}}</span>";
+
+    /**
+     * 현재 날짜 기준으로 확진자 감염현황을 렌더링 해주는 함수
+     */
+    function renderDomesticStatus() {
+
+    }
 
     /**
      * 7일간 확진자 감염현황 그래프 렌더링 함수
