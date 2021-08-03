@@ -2,5 +2,6 @@
 
 ---
 ## 실행화면
-![image](img.png)
+![image](./src/main/resources/static/img/img.png)
+
 * 웹 구동 시 실행화면입니다.
